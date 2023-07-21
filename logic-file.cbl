@@ -1,0 +1,7 @@
+       FD PRODUCTS-FILE.
+       01 PRODUCT-REGISTRATION.
+           05 PRODUCT-ID PIC 9(6).
+           05 PRODUCT-NAME PIC X(30).
+           05 PRODUCT-BRAND PIC X(30).
+           05 PRODUCT-CATEGORY PIC X(30).
+           05 PRODUCT-PRICE PIC 9(6).

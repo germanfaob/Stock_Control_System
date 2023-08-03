@@ -73,7 +73,8 @@
        WRITE PRODUCT-REGISTRATION.
 
        RESTART.
-       DISPLAY "Do you want to store another record in the database?".
+       DISPLAY
+       "Do you want to store another record in the database? (Y-N)".
        ACCEPT YES-NO.
        IF YES-NO = "Y"
        MOVE "Y" TO YES-NO.

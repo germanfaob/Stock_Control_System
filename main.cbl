@@ -14,7 +14,7 @@
 
        DISPLAY-MENU.
            DISPLAY "Stock Management Menu"
-           DISPLAY "1. Inventary Tracking"
+           DISPLAY "1. Inventory Tracking"
            DISPLAY "2. Order Management"
            DISPLAY "3. Entry and Exit Registration"
            DISPLAY "4. Reports Generation"
@@ -24,14 +24,17 @@
 
        PROCESS-OPTION.
            IF MENU-OPTION = 1 THEN
-               CALL "inventory"
-               DISPLAY "Returning to the main manu."
+               CALL "inventory-menu"
+               DISPLAY "Returning to the main manu..."
+               PERFORM DISPLAY-MENU
+           ELSE IF MENU-OPTION = 2 THEN
+               CALL "order-menu"
+               DISPLAY "Returning to the main manu..."
                PERFORM DISPLAY-MENU
            ELSE
                DISPLAY
                "Invalid option. Please enter a valid choice (0-4):"
                PERFORM DISPLAY-MENU
            END-IF.
-
 
        END PROGRAM main-program.

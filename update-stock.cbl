@@ -1,0 +1,145 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. update-stock.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+
+      * Creating physical file in dynamic mode.
+       FILE-CONTROL.
+       COPY "physical-file.cbl".
+
+       DATA DIVISION.
+       FILE SECTION.
+      * Logic file with products fields.
+       COPY "logic-file.cbl".
+
+       WORKING-STORAGE SECTION.
+       77 YES-TO-UPDATE PIC X.
+       77 RECORD-FOUND PIC X.
+       77 PRODUCT-ID-FIELD PIC Z(5).
+       01 NEW-PRODUCT-PRICE PIC 9(6).
+       01 NEW-PRODUCT-NAME PIC X(30).
+       01 NEW-PRODUCT-BRAND PIC X(30).
+       01 NEW-PRODUCT-CATEGORY PIC X(30).
+
+       PROCEDURE DIVISION.
+
+       PROGRAM-BEGIN.
+       OPEN I-O PRODUCTS-FILE.
+       PERFORM GET-PRODUCT-RECORD.
+       PERFORM UPDATE-RECORDS
+       UNTIL PRODUCT-ID = ZEROES.
+       CLOSE PRODUCTS-FILE.
+       GOBACK.
+
+       GET-PRODUCT-RECORD.
+       PERFORM INITIALIZE-PRODUCT-RECORD.
+       PERFORM INSERT-ID-PRODUCT.
+       MOVE "N" TO RECORD-FOUND.
+       PERFORM FIND-PRODUCT-RECORD
+       UNTIL RECORD-FOUND = "S" OR PRODUCT-ID = ZEROES.
+
+       INITIALIZE-PRODUCT-RECORD.
+       MOVE SPACE TO PRODUCT-REGISTRATION.
+       MOVE ZEROES TO PRODUCT-ID.
+
+       INSERT-ID-PRODUCT.
+       DISPLAY " ".
+       DISPLAY "Enter a product id number.".
+       DISPLAY "Enter a number from 1 to 99999".
+       DISPLAY "Enter anything else to exit."
+       ACCEPT PRODUCT-ID-FIELD.
+       MOVE PRODUCT-ID-FIELD TO PRODUCT-ID.
+
+       FIND-PRODUCT-RECORD.
+       PERFORM READ-PRODUCT-ID.
+       IF RECORD-FOUND = "N"
+       DISPLAY "No record found with that id."
+       PERFORM INSERT-ID-PRODUCT.
+
+       READ-PRODUCT-ID.
+       MOVE "S" TO RECORD-FOUND.
+       READ PRODUCTS-FILE RECORD
+       INVALID KEY
+       MOVE "N" TO RECORD-FOUND.
+       READ PRODUCTS-FILE RECORD WITH LOCK
+       INVALID KEY
+       MOVE "N" TO RECORD-FOUND.
+       READ PRODUCTS-FILE RECORD
+       INVALID KEY
+       MOVE "N" TO RECORD-FOUND.
+
+       UPDATE-RECORDS.
+       PERFORM SHOW-ALL-FIELDS.
+       MOVE "Z" TO YES-TO-UPDATE.
+       PERFORM ASK-TO-UPDATE
+       UNTIL YES-TO-UPDATE = "S" OR "N".
+       IF YES-TO-UPDATE = "S"
+           PERFORM UPDATE-RECORD.
+           PERFORM GET-PRODUCT-RECORD.
+
+
+       SHOW-ALL-FIELDS.
+       DISPLAY " ".
+       PERFORM SHOW-PRODUCT-ID.
+       PERFORM SHOW-PRODUCT-NAME.
+       PERFORM SHOW-PRODUCT-BRAND.
+       PERFORM SHOW-PRODUCT-CATEGORY.
+       PERFORM SHOW-PRODUCT-PRICE.
+       DISPLAY " ".
+
+       SHOW-PRODUCT-ID.
+       DISPLAY "ID: " PRODUCT-ID.
+       SHOW-PRODUCT-NAME.
+       DISPLAY "Name: " PRODUCT-NAME.
+       SHOW-PRODUCT-BRAND.
+       DISPLAY "Brand: " PRODUCT-BRAND.
+       SHOW-PRODUCT-CATEGORY.
+       DISPLAY "Category: " PRODUCT-CATEGORY.
+       SHOW-PRODUCT-PRICE.
+       DISPLAY "Price: " PRODUCT-PRICE.
+
+       ASK-TO-UPDATE.
+       DISPLAY "Are you sure you want to update this record (Y/N)?".
+       ACCEPT YES-TO-UPDATE.
+       IF YES-TO-UPDATE = "Y"
+              MOVE "S" TO YES-TO-UPDATE.
+       IF YES-TO-UPDATE = "N"
+              MOVE "N" TO YES-TO-UPDATE.
+       IF YES-TO-UPDATE NOT = "S" AND
+          YES-TO-UPDATE NOT = "N"
+          DISPLAY "You must be enter Y/N.".
+
+       UPDATE-RECORD.
+       PERFORM UPDATE-NAME.
+       PERFORM UPDATE-BRAND.
+       PERFORM UPDATE-CATEGORY.
+       PERFORM UPDATE-PRICE.
+
+       UPDATE-NAME.
+       DISPLAY "Enter the new name: "
+       ACCEPT NEW-PRODUCT-NAME
+       MOVE NEW-PRODUCT-NAME TO PRODUCT-NAME
+       REWRITE PRODUCT-REGISTRATION
+       INVALID KEY
+       DISPLAY "Error updating product name.".
+       UPDATE-BRAND.
+       DISPLAY "Enter the new brand: "
+       ACCEPT NEW-PRODUCT-BRAND
+       MOVE NEW-PRODUCT-BRAND TO PRODUCT-BRAND
+       REWRITE PRODUCT-REGISTRATION
+       INVALID KEY
+       DISPLAY "Error updating product brand.".
+       UPDATE-CATEGORY.
+       DISPLAY "Enter the new category: "
+       ACCEPT NEW-PRODUCT-CATEGORY
+       MOVE NEW-PRODUCT-CATEGORY TO PRODUCT-CATEGORY
+       REWRITE PRODUCT-REGISTRATION
+       INVALID KEY
+       DISPLAY "Error updating product category.".
+       UPDATE-PRICE.
+       DISPLAY "Enter the new price: "
+       ACCEPT NEW-PRODUCT-PRICE
+       MOVE NEW-PRODUCT-PRICE TO PRODUCT-PRICE
+       REWRITE PRODUCT-REGISTRATION
+       INVALID KEY
+       DISPLAY "Error updating product price.".

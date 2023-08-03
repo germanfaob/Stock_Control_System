@@ -1,16 +1,16 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. check-stock.
+       PROGRAM-ID. view-order.
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
 
       *Creating physical file in dynamic mode.
        FILE-CONTROL.
-       COPY "physical-file.cbl".
+       COPY "order-physical-file.cbl".
 
        DATA DIVISION.
        FILE SECTION.
       *Logic file with products fields.
-       COPY "logic-file.cbl".
+       COPY "order-logic-file.cbl".
 
        WORKING-STORAGE SECTION.
        01 END-OF-FILE PIC 9 VALUE 0.
@@ -24,23 +24,27 @@
        GOBACK.
 
        OPENING-PROCEDURE.
-       OPEN I-O PRODUCTS-FILE.
+       OPEN I-O ORDERS-FILE.
 
        CLOSING-PROCEDURE.
-       CLOSE PRODUCTS-FILE.
+       CLOSE ORDERS-FILE.
 
        READ-PRODUCT.
-       READ PRODUCTS-FILE
+       READ ORDERS-FILE
            AT END MOVE 1 TO END-OF-FILE
        END-READ.
 
        IF END-OF-FILE = 0
-           DISPLAY "ID: " PRODUCT-ID
-           " Name: " PRODUCT-NAME
-           " Brand: " PRODUCT-BRAND
+           DISPLAY "Id: " ORDER-ID
+           " Customer name: " ORDER-CUSTOMER-NAME
+           " Date: " ORDER-DATE
            DISPLAY
-           "Category: " PRODUCT-CATEGORY
-           " Price: " PRODUCT-PRICE
+           "Status: " ORDER-STATUS
+           DISPLAY
+           "Id producto: " PRODUCT-ID
+           " Product name: " PRODUCT-NAME
+           " Quantity: " QUANTITY
+           " Price: " PRICE
        DISPLAY "-------------------------------------------------------"
-       "-----------------------------"
+       "--------------------------------------------------------------"
        END-IF.
